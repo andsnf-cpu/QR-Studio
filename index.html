@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>QR Studio</title>
+
+<link rel="stylesheet" href="./style.css" />
+<script src="./qr-code-styling.js"></script>
+<script src="./qr-presets.js"></script>
+<script src="./qr-effects.js"></script>
+<script src="./app.js" defer></script>
+</head>
+
+<body>
+  <main class="app-shell">
+    <header class="topbar">
+      <div class="brand" aria-label="QR Studio">
+        <div class="brand-mark" aria-hidden="true"><span></span><span></span><span></span></div>
+        <span class="brand-name">QR Studio</span>
+      </div>
+
+      <div class="topbar-divider" aria-hidden="true"></div>
+
+      <label class="top-field link-field" for="qrData">
+        <span class="top-field-label">LINK / TESTO</span>
+        <input id="qrData" type="text" value="https://example.com" placeholder="https://tuosito.it/tour/mio-tour" autocomplete="off" spellcheck="false" />
+      </label>
+
+      <input id="logoInput" type="file" accept="image/png,image/jpeg,image/webp,image/svg+xml" hidden />
+
+      <button id="logoButton" class="top-logo-button" type="button" title="Scegli o sostituisci il logo">
+        <span id="logoThumb" class="logo-thumb"><span class="logo-placeholder">+</span></span>
+        <span class="top-logo-copy">
+          <span class="top-field-label">LOGO</span>
+          <span id="logoName" class="logo-name">image.png</span>
+        </span>
+      </button>
+
+      <label class="top-field size-field" for="qrSize">
+        <span class="top-field-label">EXPORT</span>
+        <select id="qrSize" title="Dimensione del PNG esportato">
+          <option value="400">400 px</option>
+          <option value="600" selected>600 px</option>
+          <option value="800">800 px</option>
+          <option value="1024">1024 px</option>
+          <option value="1400">1400 px</option>
+          <option value="2000">2000 px</option>
+        </select>
+      </label>
+
+      <label class="top-field filename-field" for="fileName">
+        <span class="top-field-label">NOME FILE</span>
+        <input id="fileName" type="text" value="qr-tour" autocomplete="off" />
+      </label>
+
+      <div class="topbar-actions">
+        <button id="resetBtn" class="icon-button" type="button" title="Ripristina impostazioni" aria-label="Ripristina impostazioni">↺</button>
+        <button id="downloadBtn" class="export-button" type="button"><span class="export-icon" aria-hidden="true">↓</span>Esporta PNG</button>
+      </div>
+    </header>
+
+    <section class="workspace">
+      <!-- Ogni colonna contiene: tab + proprio pannello impostazioni -->
+      <div class="workspace-header">
+        <div class="toolbar-column toolbar-column-left">
+          <nav class="tool-tabs" aria-label="Preset e sfondo">
+            <button class="tool-tab is-active" type="button" data-panel="presets">Preset</button>
+            <button class="tool-tab" type="button" data-panel="background">Sfondo</button>
+          </nav>
+
+          <div class="toolbar-popover toolbar-popover-left">
+            <section class="settings-panel is-active" data-settings-panel="presets">
+  <div class="panel-heading">
+    <span>Preset grafici</span>
+    <small>Seleziona uno stile dalla libreria</small>
+  </div>
+
+  <div id="presetLibraryContainer"></div>
+</section>
+
+            <section class="settings-panel" data-settings-panel="background">
+  <div class="panel-heading">
+    <span>Sfondo QR</span>
+    <small>Mantieni contrasto alto per una scansione sicura</small>
+  </div>
+
+  <div class="option-grid option-grid-2">
+    <label class="color-control" for="backgroundColor1">
+      <span>Sfondo 1</span>
+      <input id="backgroundColor1" type="color" value="#ffffff" />
+    </label>
+
+    <label class="color-control" for="backgroundColor2">
+      <span>Sfondo 2</span>
+      <input id="backgroundColor2" type="color" value="#f4f7ff" />
+    </label>
+
+    <label class="option-row-wide" for="backgroundGradientType">
+      <span>Effetto</span>
+      <select id="backgroundGradientType">
+        <option value="solid" selected>Colore pieno</option>
+        <option value="linear">Gradiente lineare</option>
+        <option value="radial">Gradiente radiale</option>
+      </select>
+    </label>
+
+    <label for="backgroundOpacity">
+      <span>
+        Opacità
+        <b id="backgroundOpacityValue">100%</b>
+      </span>
+      <input
+        id="backgroundOpacity"
+        type="range"
+        min="0"
+        max="100"
+        step="1"
+        value="100"
+      />
+    </label>
+  </div>
+</section>
+          </div>
+        </div>
+
+        <div class="toolbar-column toolbar-column-center">
+          <nav class="tool-tabs" aria-label="Logo QR">
+            <button class="tool-tab" type="button" data-panel="logo">Logo</button>
+          </nav>
+
+          <div class="toolbar-popover toolbar-popover-center">
+           <section class="settings-panel" data-settings-panel="logo">
+  <div class="panel-heading">
+    <span>Logo centrale</span>
+    <small>Il logo resta leggibile grazie alla correzione H</small>
+  </div>
+
+  <label class="switch-row" for="showLogo">
+    <input id="showLogo" type="checkbox" checked />
+    <span class="switch"></span>
+    <span>Mostra logo centrale</span>
+  </label>
+
+  <div id="logoOptions" class="option-grid option-grid-2">
+    <label for="logoSize">
+      <span>Dimensione <b id="logoSizeValue">22%</b></span>
+      <input id="logoSize" type="range" min="10" max="32" step="1" value="22" />
+    </label>
+
+    <label for="logoMargin">
+      <span>Margine <b id="logoMarginValue">8 px</b></span>
+      <input id="logoMargin" type="range" min="0" max="30" step="1" value="8" />
+    </label>
+  </div>
+
+  <label id="hideDotsRow" class="switch-row" for="hideBackgroundDots">
+    <input id="hideBackgroundDots" type="checkbox" checked />
+    <span class="switch"></span>
+    <span>Rimuovi moduli dietro al logo</span>
+  </label>
+
+  <button id="changeLogoBtn" class="secondary-button" type="button">
+    Sostituisci logo
+  </button>
+</section>
+          </div>
+        </div>
+
+        <div class="toolbar-column toolbar-column-right">
+          <div class="toolbar-right-top">
+            <nav class="tool-tabs">
+  <button class="tool-tab" type="button" data-panel="style">
+    Stile
+  </button>
+
+  <button class="tool-tab" type="button" data-panel="colors">
+    Colori
+  </button>
+
+  <button class="tool-tab" type="button" data-panel="corners">
+    Angoli
+  </button>
+<button class="tool-tab" type="button" data-panel="effects">
+  Effetti
+</button>
+</nav>
+
+            <div class="zoom-controls" aria-label="Controllo zoom">
+              <button id="zoomOutBtn" type="button" title="Riduci zoom" aria-label="Riduci zoom">−</button>
+              <button id="zoomResetBtn" class="zoom-value" type="button" title="Reimposta zoom">100%</button>
+              <button id="zoomInBtn" type="button" title="Aumenta zoom" aria-label="Aumenta zoom">+</button>
+            </div>
+          </div>
+
+          <div class="toolbar-popover toolbar-popover-right">
+            <section class="settings-panel" data-settings-panel="style">
+              <div class="panel-heading"><span>Stile dei moduli</span><small>La forma dei pixel del QR</small></div>
+              <div class="option-row option-row-wide">
+                <label for="dotsType">Forma</label>
+                <select id="dotsType">
+                  <option value="square">Square — geometrico</option>
+                  <option value="dots">Dots — puntini</option>
+                  <option value="rounded" selected>Rounded — moderno</option>
+                  <option value="extra-rounded">Extra rounded — morbido</option>
+                  <option value="classy">Classy — organico</option>
+                  <option value="classy-rounded">Classy rounded — premium</option>
+                </select>
+              </div>
+            </section>
+
+            <section class="settings-panel" data-settings-panel="colors">
+              <div class="panel-heading"><span>Colori moduli</span><small>Usa un colore o un gradiente</small></div>
+              <div class="option-grid option-grid-2">
+                <label class="color-control" for="dotsColor1"><span>Colore 1</span><input id="dotsColor1" type="color" value="#111827" /></label>
+                <label class="color-control" for="dotsColor2"><span>Colore 2</span><input id="dotsColor2" type="color" value="#1769e0" /></label>
+                <label for="gradientType"><span>Effetto</span><select id="gradientType"><option value="solid" selected>Colore pieno</option><option value="linear">Gradiente lineare</option><option value="radial">Gradiente radiale</option></select></label>
+                <label for="gradientRotation"><span>Angolo <b id="gradientRotationValue">45°</b></span><input id="gradientRotation" type="range" min="0" max="360" step="1" value="45" /></label>
+              </div>
+            </section>
+
+            <section class="settings-panel" data-settings-panel="corners">
+              <div class="panel-heading"><span>Angoli di riconoscimento</span><small>Personalizza i tre finder del QR</small></div>
+              <div class="option-grid option-grid-2">
+                <label for="cornersSquareType"><span>Cornice</span><select id="cornersSquareType"><option value="square">Square</option><option value="dot">Dot</option><option value="extra-rounded" selected>Extra rounded</option></select></label>
+                <label for="cornersDotType"><span>Centro</span><select id="cornersDotType"><option value="square">Square</option><option value="dot" selected>Dot</option></select></label>
+                <label class="color-control" for="cornersColor1"><span>Colore 1</span><input id="cornersColor1" type="color" value="#111827" /></label>
+                <label class="color-control" for="cornersColor2"><span>Colore 2</span><input id="cornersColor2" type="color" value="#1769e0" /></label>
+              </div>
+              <label class="switch-row" for="useCornersGradient"><input id="useCornersGradient" type="checkbox" /><span class="switch"></span><span>Applica il gradiente agli angoli</span></label>
+            </section>
+            <section class="settings-panel" data-settings-panel="effects">
+  <div class="panel-heading">
+    <span>Effetti QR</span>
+    <small>Preset grafici sperimentali</small>
+  </div>
+
+  <div class="effects-grid">
+    <button class="effect-card" type="button" data-effect="bubble">
+      <span class="effect-icon bubble-icon">●</span>
+      <span>Bubble</span>
+    </button>
+
+    <button class="effect-card" type="button" data-effect="pixel">
+      <span class="effect-icon pixel-icon">▦</span>
+      <span>Pixel</span>
+    </button>
+
+    <button class="effect-card" type="button" data-effect="liquid">
+      <span class="effect-icon liquid-icon">◉</span>
+      <span>Liquid</span>
+    </button>
+
+    <button class="effect-card" type="button" data-effect="glitch">
+      <span class="effect-icon glitch-icon">≋</span>
+      <span>Glitch</span>
+    </button>
+
+    <button class="effect-card" type="button" data-effect="mono">
+      <span class="effect-icon mono-icon">◐</span>
+      <span>Mono</span>
+    </button>
+
+    <button class="effect-card" type="button" data-effect="contrast">
+      <span class="effect-icon contrast-icon">◑</span>
+      <span>Contrast</span>
+    </button>
+
+    <button class="effect-card" type="button" data-effect="soft">
+      <span class="effect-icon soft-icon">◌</span>
+      <span>Soft</span>
+    </button>
+
+    <button class="effect-card" type="button" data-effect="reset">
+      <span class="effect-icon reset-icon">↺</span>
+      <span>Reset stile</span>
+    </button>
+  </div>
+
+  <div class="effects-warning">
+    Gli effetti cambiano automaticamente stile, colori e angoli.
+    Verifica il QR con uno smartphone prima di stamparlo.
+  </div>
+</section>
+          </div>
+        </div>
+      </div>
+
+      <section class="editor-stage">
+        <div id="artboard" class="artboard" aria-label="Anteprima QR code">
+          <div id="qrScale" class="qr-scale"><div id="qrContainer" class="qr-container"></div></div>
+        </div>
+      </section>
+    </section>
+
+    <div id="toast" class="toast" role="status" aria-live="polite"></div>
+  </main>
+</body>
+</html>

@@ -1,0 +1,78 @@
+{
+  "name": "qr-studio",
+  "version": "1.0.0",
+  "description": "QR Studio - Generatore QR con logo, preset ed effetti",
+  "main": "main.js",
+  "author": "Andrea",
+  "license": "MIT",
+  "scripts": {
+    "start": "electron .",
+    "build": "electron-builder --win",
+    "build:portable": "electron-builder --win portable",
+    "build:installer": "electron-builder --win nsis",
+    "build:mac": "electron-builder --mac dmg",
+"build:mac:intel": "electron-builder --mac dmg --x64",
+"build:mac:apple": "electron-builder --mac dmg --arm64",
+"build:mac:universal": "electron-builder --mac dmg --universal"
+  },
+  "devDependencies": {
+    "electron": "^44.4.3",
+    "electron-builder": "^26.0.0"
+  },
+  "build": {
+    "appId": "it.qrstudio.app",
+    "productName": "QR Studio",
+    "asar": true,
+    "directories": {
+      "output": "dist"
+    },
+    "files": [
+      "main.js",
+      "index.html",
+      "style.css",
+      "app.js",
+      "qr-presets.js",
+      "qr-effects.js",
+      "qr-code-styling.js",
+      "image.png",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        {
+          "target": "nsis",
+          "arch": [
+            "x64"
+          ]
+        },
+        {
+          "target": "portable",
+          "arch": [
+            "x64"
+          ]
+        }
+      ],
+      "artifactName": "${productName}-${version}-${arch}.${ext}"
+    },
+    "mac": {
+  "category": "public.app-category.graphics-design",
+  "target": [
+    {
+      "target": "dmg",
+      "arch": [
+        "x64",
+        "arm64"
+      ]
+    }
+  ],
+  "artifactName": "${productName}-${version}-mac-${arch}.${ext}"
+},
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "QR Studio"
+    }
+  }
+}
