@@ -10,7 +10,7 @@
     "build": "electron-builder --win",
     "build:portable": "electron-builder --win portable",
     "build:installer": "electron-builder --win nsis",
-    "build:mac": "electron-builder --mac dmg",
+    "build:mac": "electron-builder --mac dmg --publish never"
 "build:mac:intel": "electron-builder --mac dmg --x64",
 "build:mac:apple": "electron-builder --mac dmg --arm64",
 "build:mac:universal": "electron-builder --mac dmg --universal"
