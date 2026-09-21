@@ -1,0 +1,32 @@
+name: Crea QR Studio per Mac
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-macos:
+    runs-on: macos-latest
+
+    steps:
+      - name: Scarica sorgenti
+        uses: actions/checkout@v4
+
+      - name: Installa Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+
+      - name: Installa dipendenze
+        run: npm install
+
+      - name: Crea il DMG
+        run: npm run build:mac
+
+      - name: Carica DMG finale
+        uses: actions/upload-artifact@v4
+        with:
+          name: QR-Studio-Mac
+          path: dist/*.dmg
+          if-no-files-found: error
+          
